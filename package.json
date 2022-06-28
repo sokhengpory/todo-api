@@ -1,7 +1,13 @@
 {
   "name": "todo-api",
   "packageManager": "yarn@3.2.1",
+  "scripts": {
+    "dev": "nodemon server"
+  },
   "dependencies": {
     "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.18"
   }
 }
