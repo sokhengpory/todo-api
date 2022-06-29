@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const tasks = await Task.find({});
+    const tasks = await Task.find({}, { __v: 0 });
 
     if (!tasks.length) {
       return res.status(404).send({ message: 'Task not found.' });
