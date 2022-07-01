@@ -1,21 +1,15 @@
 const express = require('express');
 const User = require('../models/user');
+const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/me', auth, async (req, res) => {
   try {
-    const users = await User.find({});
-
-    if (!users.length) {
-      return res.status(404).send({
-        message: 'There is no user.',
-      });
-    }
+    const user = req.user;
 
     res.status(200).send({
-      message: 'success',
-      data: users,
+      data: user,
     });
   } catch (error) {
     res.status(500).send({
@@ -25,14 +19,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Sign Up
 router.post('/', async (req, res) => {
+  const user = new User(req.body);
   try {
-    const user = new User(req.body);
-    await user.save();
+    const token = await user.generateAuthToken();
 
     res.status(200).send({
       message: 'success',
-      data: user,
+      data: {
+        user,
+        token,
+      },
     });
   } catch (error) {
     if (error.code === 11000) {
