@@ -10,6 +10,10 @@ const taskSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  owner: {
+    type: Number,
+    required: true,
+  },
 });
 
 const Task = mongoose.model('Task', taskSchema);
