@@ -13,7 +13,6 @@ router.get('/me', auth, async (req, res) => {
     });
   } catch (error) {
     res.status(500).send({
-      message: 'fail',
       error,
     });
   }
@@ -26,7 +25,6 @@ router.post('/', async (req, res) => {
     const token = await user.generateAuthToken();
 
     res.status(200).send({
-      message: 'success',
       data: {
         user,
         token,
@@ -46,20 +44,32 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/me', auth, async (req, res) => {
   try {
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: req.params.id },
-      req.body,
-      { new: true, runValidators: true }
-    );
+    const updateBody = Object.keys(req.body);
+    const validUpdate = ['name'];
+
+    const isValidUpdate = validUpdate.every((el) => updateBody.includes(el));
+
+    if (!isValidUpdate) {
+      return res.status(400).send({ message: 'Invalid update.' });
+    }
+
+    const { user } = req;
+    const updateContent = req.body;
+
+    updateBody.forEach((key) => {
+      user[key] = updateContent[key];
+    });
+
+    await user.save();
+
     res.status(200).send({
       message: 'success',
-      data: updatedUser,
+      user,
     });
   } catch (error) {
     res.status(500).send({
-      message: 'fail',
       error,
     });
   }
