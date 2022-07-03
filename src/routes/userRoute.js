@@ -42,6 +42,24 @@ router.post('/login', async (req, res) => {
   }
 });
 
+router.get('/logout', auth, async (req, res) => {
+  try {
+    const { user } = req;
+    // filter out the current token from the existing tokens array
+    const newTokens = user.tokens.filter((el) => el.token !== req.token);
+
+    // delete token property from request object
+    delete req.token;
+
+    user.tokens = newTokens;
+    await user.save();
+
+    res.status(200).send({ message: 'success' });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 // Get user detail
 router.get('/me', auth, async (req, res) => {
   try {
