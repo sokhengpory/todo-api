@@ -4,31 +4,15 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-router.get('/me', auth, async (req, res) => {
-  try {
-    const user = req.user;
-
-    res.status(200).send({
-      data: user,
-    });
-  } catch (error) {
-    res.status(500).send({
-      error,
-    });
-  }
-});
-
 // Sign Up
 router.post('/', async (req, res) => {
   const user = new User(req.body);
   try {
     const token = await user.generateAuthToken();
 
-    res.status(200).send({
-      data: {
-        user,
-        token,
-      },
+    res.status(201).send({
+      user,
+      token,
     });
   } catch (error) {
     if (error.code === 11000) {
@@ -44,6 +28,36 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Sign in
+router.post('/login', async (req, res) => {
+  try {
+    const { name, password } = req.body;
+
+    const user = await User.findByCredential(name, password);
+    const token = await user.generateAuthToken();
+
+    res.status(200).send({ user, token });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
+// Get user detail
+router.get('/me', auth, async (req, res) => {
+  try {
+    const user = req.user;
+
+    res.status(200).send({
+      user,
+    });
+  } catch (error) {
+    res.status(500).send({
+      error,
+    });
+  }
+});
+
+// Update user detail
 router.patch('/me', auth, async (req, res) => {
   try {
     const updateBody = Object.keys(req.body);
@@ -75,19 +89,16 @@ router.patch('/me', auth, async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+// Delete user
+router.delete('/me', auth, async (req, res) => {
   try {
-    const deletedUser = await User.findOneAndDelete({ _id: req.params.id });
-
-    if (!deletedUser) {
-      return res.status(404).send({
-        message: 'User not found.',
-      });
-    }
+    // await User.deleteOne({ _id: req.user._id });
+    const { user } = req;
+    await user.deleteOne();
 
     res.status(200).send({
       message: 'success',
-      data: deletedUser,
+      user,
     });
   } catch (error) {
     res.status(500).send({

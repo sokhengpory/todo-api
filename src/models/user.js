@@ -36,9 +36,21 @@ userSchema.methods.generateAuthToken = async function () {
   return token;
 };
 
-userSchema.static('findByCredential', function (name, password) {
-  console.log(name, password);
-});
+userSchema.statics.findByCredential = async (name, password) => {
+  const user = await User.findOne({ name });
+
+  if (!user) {
+    throw new Error('User not found!');
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    throw new Error('Wrong password');
+  }
+
+  return user;
+};
 
 userSchema.pre('save', async function (next) {
   const user = this;
