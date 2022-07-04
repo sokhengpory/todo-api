@@ -94,10 +94,15 @@ userSchema.pre('save', async function (next) {
   const user = this;
   const password = user.password;
 
+  console.log(password);
+  console.log(user.isModified('password'));
+
   if (user.isModified('password')) {
     const hashedPassword = await bcrypt.hash(password, 8);
     user.password = hashedPassword;
   }
+
+  console.log(user.password);
 
   next();
 });

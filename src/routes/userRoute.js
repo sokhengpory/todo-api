@@ -38,7 +38,7 @@ router.post('/login', async (req, res) => {
 
     res.status(200).send({ user, token });
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    res.status(401).send({ message: error.message });
   }
 });
 
@@ -80,8 +80,9 @@ router.get('/me', auth, async (req, res) => {
 router.patch('/me', auth, async (req, res) => {
   try {
     const updateBody = Object.keys(req.body);
-    const validUpdate = ['name'];
+    const validUpdate = ['name', 'password'];
 
+    console.log(updateBody);
     const isValidUpdate = updateBody.every((el) => validUpdate.includes(el));
 
     if (!isValidUpdate) {
