@@ -4,6 +4,7 @@ const Task = require('../models/task');
 
 const router = express.Router();
 
+// Get tasks
 router.get('/', auth, async (req, res) => {
   const { _id: userId } = req.user;
 
@@ -26,6 +27,7 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+// Create task
 router.post('/', auth, async (req, res) => {
   const { description, completed } = req.body;
   const { _id: owner } = req.user;
@@ -51,17 +53,32 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-router.patch('/:id', async (req, res) => {
+// Update task
+router.patch('/:id', auth, async (req, res) => {
+  const { id: _id } = req.params;
+  const updateBodyKey = Object.keys(req.body);
+  const validUpdate = ['description', 'completed'];
+
+  const isValid = updateBodyKey.every((el) => validUpdate.includes(el));
+
+  if (!isValid) {
+    return res.status(400).send({
+      message: 'Invalid Update',
+    });
+  }
+
   try {
-    const updateTask = await Task.findOneAndUpdate(
-      { _id: req.params.id },
-      req.body,
-      { new: true }
-    );
+    const updatedTask = await Task.findOneAndUpdate({ _id }, req.body, {
+      new: true,
+    });
+
+    if (!updatedTask) {
+      return res.status(404).send({ message: 'Task not found.' });
+    }
 
     res.status(200).send({
       message: 'success',
-      data: updateTask,
+      data: updatedTask,
     });
   } catch (error) {
     res.status(404).send({
@@ -71,17 +88,24 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+// Delete task
+router.delete('/:id', auth, async (req, res) => {
+  const { id: _id } = req.params;
+
   try {
-    await Task.findOneAndDelete({
-      _id: req.params.id,
+    const task = await Task.findOneAndDelete({
+      _id,
     });
+
+    if (!task) {
+      return res.status(404).send({ message: 'Task not found.' });
+    }
 
     res.status(200).send({
       message: 'success',
     });
   } catch (error) {
-    res.status(404).send({
+    res.status(500).send({
       message: 'fail',
       error,
     });

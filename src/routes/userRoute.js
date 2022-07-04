@@ -42,6 +42,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Logout
 router.get('/logout', auth, async (req, res) => {
   try {
     const { user } = req;
@@ -81,7 +82,7 @@ router.patch('/me', auth, async (req, res) => {
     const updateBody = Object.keys(req.body);
     const validUpdate = ['name'];
 
-    const isValidUpdate = validUpdate.every((el) => updateBody.includes(el));
+    const isValidUpdate = updateBody.every((el) => validUpdate.includes(el));
 
     if (!isValidUpdate) {
       return res.status(400).send({ message: 'Invalid update.' });
