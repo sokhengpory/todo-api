@@ -17,7 +17,32 @@ router.get('/', auth, async (req, res) => {
 
     res.status(200).send({
       message: 'success',
+      total: tasks.length,
       tasks,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: 'fail',
+      error,
+    });
+  }
+});
+
+// Get specific task
+router.get('/:id', auth, async (req, res) => {
+  const { id: _id } = req.params;
+  const { _id: owner } = req.user;
+  try {
+    const task = await Task.findOne({ _id, owner }, { __v: 0 });
+
+    if (!task) {
+      return res.status(404).send({
+        message: 'Task not found.',
+      });
+    }
+
+    res.status(200).send({
+      task,
     });
   } catch (error) {
     res.status(500).send({
