@@ -24,6 +24,14 @@ const userSchema = new mongoose.Schema({
   tokens: [{ token: { type: String, required: true } }],
 });
 
+userSchema.methods.toJSON = function () {
+  const userObject = this.toObject();
+  delete userObject.password;
+  delete userObject.tokens;
+
+  return userObject;
+};
+
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const id = user._id.toString();
