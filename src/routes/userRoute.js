@@ -4,10 +4,13 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-// Sign Up
+// Signup
 router.post('/', async (req, res) => {
+  // create user from User model
   const user = new User(req.body);
+
   try {
+    // generate auth token
     const token = await user.generateAuthToken();
 
     res.status(201).send({
@@ -28,11 +31,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Sign in
+// Login
 router.post('/login', async (req, res) => {
   try {
     const { name, password } = req.body;
 
+    // find user with their name and password
     const user = await User.findByCredential(name, password);
     const token = await user.generateAuthToken();
 
@@ -82,7 +86,7 @@ router.patch('/me', auth, async (req, res) => {
     const updateBody = Object.keys(req.body);
     const validUpdate = ['name', 'password'];
 
-    console.log(updateBody);
+    // filter update field with valid update field
     const isValidUpdate = updateBody.every((el) => validUpdate.includes(el));
 
     if (!isValidUpdate) {
@@ -92,10 +96,12 @@ router.patch('/me', auth, async (req, res) => {
     const { user } = req;
     const updateContent = req.body;
 
+    // change user property with request body
     updateBody.forEach((key) => {
       user[key] = updateContent[key];
     });
 
+    // then save to database
     await user.save();
 
     res.status(200).send({

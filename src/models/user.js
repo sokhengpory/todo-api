@@ -30,12 +30,14 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+// create virtual property name tasks
 userSchema.virtual('tasks', {
   ref: 'Task',
   localField: '_id',
   foreignField: 'owner',
 });
 
+// create virtual property name totalTask
 userSchema.virtual('totalTask', {
   ref: 'Task',
   localField: '_id',
@@ -43,6 +45,7 @@ userSchema.virtual('totalTask', {
   count: true,
 });
 
+// delete sensitive data before sending to the respone
 userSchema.methods.toJSON = function () {
   const userObject = this.toObject();
 
@@ -54,18 +57,21 @@ userSchema.methods.toJSON = function () {
   return userObject;
 };
 
+// method use for generate authorization token
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const id = user._id.toString();
 
   const token = jwt.sign({ id }, 'helloworld');
 
+  // add new token to the existing tokens array
   user.tokens = user.tokens.concat({ token });
   await user.save();
 
   return token;
 };
 
+// method use to find user with their credential
 userSchema.statics.findByCredential = async (name, password) => {
   const user = await User.findOne({ name });
 
@@ -73,6 +79,7 @@ userSchema.statics.findByCredential = async (name, password) => {
     throw new Error('User not found!');
   }
 
+  // compare user password when login
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
@@ -82,6 +89,7 @@ userSchema.statics.findByCredential = async (name, password) => {
   return user;
 };
 
+// insert the virtual properties with the pre hook on findOne
 userSchema.pre('findOne', function (next) {
   const user = this;
   user.populate({ path: 'tasks', select: 'description completed owner' });
@@ -90,23 +98,20 @@ userSchema.pre('findOne', function (next) {
   next();
 });
 
+// hash the plain password before save to the database with pre hook save
 userSchema.pre('save', async function (next) {
   const user = this;
   const password = user.password;
-
-  console.log(password);
-  console.log(user.isModified('password'));
 
   if (user.isModified('password')) {
     const hashedPassword = await bcrypt.hash(password, 8);
     user.password = hashedPassword;
   }
 
-  console.log(user.password);
-
   next();
 });
 
+// delete all the tasks that associate with user when user is deleted
 userSchema.pre('deleteOne', { document: true }, async function (next) {
   const user = this;
   await Task.deleteMany({ owner: user._id });
