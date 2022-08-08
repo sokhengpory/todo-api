@@ -37,7 +37,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cors", "npm:2.8.5"],\
             ["express", "npm:4.18.1"],\
             ["jsonwebtoken", "npm:8.5.1"],\
-            ["mongoose", "npm:6.4.1"],\
+            ["mongoose", "npm:6.5.1"],\
             ["nodemon", "npm:2.0.19"]\
           ],\
           "linkType": "SOFT"\
@@ -301,10 +301,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["bson", [\
-        ["npm:4.6.4", {\
-          "packageLocation": "./.yarn/cache/bson-npm-4.6.4-765c7991fe-f56375865c.zip/node_modules/bson/",\
+        ["npm:4.6.5", {\
+          "packageLocation": "./.yarn/cache/bson-npm-4.6.5-e3f9f5300c-b9d4856241.zip/node_modules/bson/",\
           "packageDependencies": [\
-            ["bson", "npm:4.6.4"],\
+            ["bson", "npm:4.6.5"],\
             ["buffer", "npm:5.7.1"]\
           ],\
           "linkType": "HARD"\
@@ -1456,11 +1456,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["mongodb", [\
-        ["npm:4.7.0", {\
-          "packageLocation": "./.yarn/cache/mongodb-npm-4.7.0-d0a46888e7-6c8ddf1d14.zip/node_modules/mongodb/",\
+        ["npm:4.8.1", {\
+          "packageLocation": "./.yarn/cache/mongodb-npm-4.8.1-95f8dfccef-97ff4ebe3f.zip/node_modules/mongodb/",\
           "packageDependencies": [\
-            ["mongodb", "npm:4.7.0"],\
-            ["bson", "npm:4.6.4"],\
+            ["mongodb", "npm:4.8.1"],\
+            ["bson", "npm:4.6.5"],\
             ["denque", "npm:2.0.1"],\
             ["mongodb-connection-string-url", "npm:2.5.2"],\
             ["saslprep", "npm:1.0.3"],\
@@ -1481,13 +1481,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["mongoose", [\
-        ["npm:6.4.1", {\
-          "packageLocation": "./.yarn/cache/mongoose-npm-6.4.1-00ffa359d6-cfbd727328.zip/node_modules/mongoose/",\
+        ["npm:6.5.1", {\
+          "packageLocation": "./.yarn/cache/mongoose-npm-6.5.1-9f20a57980-6ddf3d5826.zip/node_modules/mongoose/",\
           "packageDependencies": [\
-            ["mongoose", "npm:6.4.1"],\
-            ["bson", "npm:4.6.4"],\
+            ["mongoose", "npm:6.5.1"],\
+            ["bson", "npm:4.6.5"],\
             ["kareem", "npm:2.4.1"],\
-            ["mongodb", "npm:4.7.0"],\
+            ["mongodb", "npm:4.8.1"],\
             ["mpath", "npm:0.9.0"],\
             ["mquery", "npm:4.0.3"],\
             ["ms", "npm:2.1.3"],\
@@ -2126,7 +2126,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["cors", "npm:2.8.5"],\
             ["express", "npm:4.18.1"],\
             ["jsonwebtoken", "npm:8.5.1"],\
-            ["mongoose", "npm:6.4.1"],\
+            ["mongoose", "npm:6.5.1"],\
             ["nodemon", "npm:2.0.19"]\
           ],\
           "linkType": "SOFT"\
