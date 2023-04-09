@@ -1,6 +1,5 @@
 {
   "name": "todo-api",
-  "packageManager": "yarn@3.2.1",
   "scripts": {
     "dev": "nodemon src/index"
   },
