@@ -109,6 +109,12 @@ router.patch('/me', auth, async (req, res) => {
       user,
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).send({
+        message: 'Username already existed',
+      });
+    }
+
     res.status(500).send({
       error,
     });
