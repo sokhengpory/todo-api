@@ -1,6 +1,7 @@
 {
   "name": "todo-api",
   "scripts": {
+    "start": "node src/index.js",
     "dev": "nodemon src/index"
   },
   "dependencies": {
