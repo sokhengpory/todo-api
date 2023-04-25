@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
+    profileImageUrl: String,
     tokens: [{ token: { type: String, required: true } }],
   },
   {

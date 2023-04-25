@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const auth = require('../middleware/auth');
+const imagekit = require('../libs/imageKit');
 
 const router = express.Router();
 
@@ -130,6 +131,44 @@ router.delete('/me', auth, async (req, res) => {
     res.status(200).send({
       message: 'success',
       user,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: 'fail',
+      error,
+    });
+  }
+});
+
+// upload profile
+router.post('/profile', auth, async (req, res) => {
+  try {
+    const profileImageInfo = req.files?.user_profile;
+
+    if (!profileImageInfo) {
+      return res.status(400).send({
+        message: 'Invalid image',
+      });
+    }
+
+    const result = await imagekit.upload({
+      file: profileImageInfo.data,
+      fileName: profileImageInfo.name,
+      extensions: [
+        {
+          name: 'google-auto-tagging',
+          maxTags: 5,
+          minConfidence: 95,
+        },
+      ],
+    });
+
+    req.user.profileImageUrl = result.url;
+    await req.user.save();
+
+    res.status(200).send({
+      message: 'success',
+      profileImageUrl: result.url,
     });
   } catch (error) {
     res.status(500).send({
