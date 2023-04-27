@@ -9,7 +9,6 @@ morgan.token('date', () => {
   return dateTimeFormat.format(new Date());
 });
 
-const loggerFormat =
-  '[:remote-addr] [:method - :url] [:date] [:status - :response-time ms]';
+const loggerFormat = '[:method - :url] [:date] [:status - :response-time ms]';
 
 module.exports = () => morgan(loggerFormat);

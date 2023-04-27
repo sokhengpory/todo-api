@@ -54,7 +54,7 @@ router.get('/:id', auth, async (req, res) => {
 
 // Create task
 router.post('/', auth, async (req, res) => {
-  const { description, completed } = req.body;
+  const { description, completed, date } = req.body;
   const { _id: owner } = req.user;
 
   try {
@@ -62,6 +62,7 @@ router.post('/', auth, async (req, res) => {
       description,
       completed,
       owner,
+      date: date || Date.now(),
     });
 
     await task.save();
