@@ -83,7 +83,7 @@ router.post('/', auth, async (req, res) => {
 router.patch('/:id', auth, async (req, res) => {
   const { id: _id } = req.params;
   const updateBodyKey = Object.keys(req.body);
-  const validUpdate = ['description', 'completed'];
+  const validUpdate = ['description', 'completed', 'date'];
 
   const isValid = updateBodyKey.every((el) => validUpdate.includes(el));
 
