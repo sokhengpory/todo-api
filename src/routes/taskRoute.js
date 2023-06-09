@@ -1,4 +1,6 @@
 const express = require('express');
+const startOfDay = require('date-fns/startOfDay');
+const endOfDay = require('date-fns/endOfDay');
 const auth = require('../middleware/auth');
 const Task = require('../models/task');
 
@@ -6,10 +8,34 @@ const router = express.Router();
 
 // Get tasks
 router.get('/', auth, async (req, res) => {
+  const { date, startDate, endDate } = req.query;
   const { _id: userId } = req.user;
 
+  const query = { owner: userId };
+
+  if (date) {
+    const _date = new Date(date);
+    Object.assign(query, {
+      date: {
+        $gte: startOfDay(_date),
+        $lte: endOfDay(_date),
+      },
+    });
+  }
+
+  if (startDate) {
+    const _startDate = new Date(startDate);
+    const _endDate = new Date(endDate);
+    Object.assign(query, {
+      date: {
+        $gte: startOfDay(_startDate),
+        $lte: startOfDay(_endDate),
+      },
+    });
+  }
+
   try {
-    const tasks = await Task.find({ owner: userId }, { __v: 0 });
+    const tasks = await Task.find(query, { __v: 0 });
 
     if (!tasks.length) {
       return res.status(404).send({ message: 'Task not found.' });
@@ -62,7 +88,7 @@ router.post('/', auth, async (req, res) => {
       description,
       completed,
       owner,
-      date: date || Date.now(),
+      date,
     });
 
     await task.save();
